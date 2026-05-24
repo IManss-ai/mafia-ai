@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { GameState, ChatMessage } from '@/lib/types';
 import {
   createInitialState,
@@ -11,8 +12,9 @@ import {
 import VillagerList from '@/components/VillagerList';
 import ChatPanel from '@/components/ChatPanel';
 import VoteModal from '@/components/VoteModal';
-import NightScreen from '@/components/NightScreen';
-import EndScreen from '@/components/EndScreen';
+import AnimatedButton from '@/components/ui/AnimatedButton';
+import Avatar from '@/components/ui/Avatar';
+import PageTransition from '@/components/ui/PageTransition';
 
 export default function GamePage() {
   const [gameState, setGameState] = useState<GameState | null>(null);
@@ -269,8 +271,8 @@ export default function GamePage() {
 
   if (!gameState) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-gray-600 text-sm">Загрузка...</div>
+      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
+        <span className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -279,54 +281,158 @@ export default function GamePage() {
   const aliveVillagers = gameState.villagers.filter(v => v.status === 'alive');
 
   return (
-    <div className="h-screen bg-gray-950 flex overflow-hidden">
-      <div className="w-72 flex-shrink-0 border-r border-gray-800 flex flex-col">
-        <VillagerList
-          villagers={gameState.villagers}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-          onVote={() => setShowVoteModal(true)}
-          day={gameState.day}
-          isLoading={isLoading}
-          onSuspicionChange={handleSuspicionChange}
-        />
-      </div>
-
-      <div className="flex-1 flex flex-col min-w-0">
-        {selectedVillager ? (
-          <ChatPanel
-            villager={selectedVillager}
-            history={gameState.chatHistories[selectedVillager.id] ?? []}
-            onSendMessage={handleSendMessage}
+    <PageTransition>
+      <div className="h-screen w-full flex flex-col md:flex-row overflow-hidden relative bg-[#0A0A0A] border-l border-zinc-900/60">
+        
+        {/* Left Suspects Panel (60/40 Split: takes 380px on desktop) */}
+        <div className="w-full md:w-[350px] lg:w-[380px] flex-shrink-0 border-b md:border-b-0 md:border-r border-zinc-800 flex flex-col h-[50vh] md:h-full bg-[#111111]/30">
+          <VillagerList
+            villagers={gameState.villagers}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onVote={() => setShowVoteModal(true)}
+            day={gameState.day}
             isLoading={isLoading}
+            onSuspicionChange={handleSuspicionChange}
           />
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <div className="text-gray-700 text-sm max-w-xs">
-              Выберите подозреваемого слева чтобы начать допрос
+        </div>
+
+        {/* Right Chat Dialogue Panel */}
+        <div className="flex-1 flex flex-col h-[50vh] md:h-full relative">
+          {selectedVillager ? (
+            <ChatPanel
+              villager={selectedVillager}
+              history={gameState.chatHistories[selectedVillager.id] ?? []}
+              onSendMessage={handleSendMessage}
+              isLoading={isLoading}
+            />
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 select-none">
+              <div className="w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-purple-400 mb-4 shadow-[0_0_12px_rgba(168,85,247,0.1)]">
+                <Avatar seed="?" className="w-6 h-6 border-none bg-transparent" />
+              </div>
+              <p className="text-zinc-400 text-sm font-bold">Начало допроса</p>
+              <p className="text-zinc-500 text-xs mt-1.5 max-w-[240px] leading-relaxed">
+                Выберите одного из жителей в левой картотеке, чтобы начать перекрестный допрос.
+              </p>
             </div>
-          </div>
+          )}
+        </div>
+
+        {/* Voting Dialog Overlay */}
+        {showVoteModal && (
+          <VoteModal
+            aliveVillagers={aliveVillagers}
+            onConfirm={handleVoteConfirm}
+            onCancel={() => setShowVoteModal(false)}
+          />
         )}
+
+        {/* Night Phase Overlay with Dark Vignette */}
+        <AnimatePresence>
+          {gameState.phase === 'night' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-center p-6 select-none"
+            >
+              <div className="max-w-md w-full space-y-6">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold">НОЧЬ В АЛМАТЫ</span>
+                <motion.h2
+                  animate={{ scale: [1, 1.04, 1], opacity: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                  className="text-3xl font-extrabold text-purple-400 tracking-tight"
+                >
+                  Наступает ночь...
+                </motion.h2>
+                <p className="text-xs text-zinc-400">Город спит. Убийцы выходят на улицы.</p>
+
+                {nightNarration ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-6 pt-4"
+                  >
+                    <div className="w-12 h-[1px] bg-zinc-800 mx-auto" />
+                    <p className="text-zinc-200 text-sm leading-relaxed max-w-sm mx-auto">{nightNarration}</p>
+                    <div className="w-12 h-[1px] bg-zinc-800 mx-auto" />
+                    <AnimatedButton
+                      onClick={handleContinueFromNight}
+                      variant="primary"
+                      className="px-6 py-2.5 mx-auto bg-purple-600 hover:bg-purple-500 rounded-xl"
+                    >
+                      Продолжить расследование
+                    </AnimatedButton>
+                  </motion.div>
+                ) : (
+                  <div className="flex items-center justify-center gap-1.5 text-zinc-650 text-xs font-semibold pt-8">
+                    <span>Убийцы выбирают следующую жертву</span>
+                    <span className="animate-bounce">.</span>
+                    <span className="animate-bounce [animation-delay:150ms]">.</span>
+                    <span className="animate-bounce [animation-delay:300ms]">.</span>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* End Game Overlay screen */}
+        <AnimatePresence>
+          {(gameState.phase === 'won' || gameState.phase === 'lost') && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-black/95 backdrop-blur-md z-50 flex flex-col items-center justify-center text-center p-6 select-none"
+            >
+              <div className="max-w-sm w-full space-y-6">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold">
+                  {gameState.phase === 'won' ? 'ДЕЛО ЗАКРЫТО' : 'ДЕЛО ПРОВАЛЕНО'}
+                </span>
+
+                <h2 className={`text-3xl font-extrabold tracking-tight ${gameState.phase === 'won' ? 'text-purple-400 animate-pulse' : 'text-rose-500'}`}>
+                  {gameState.phase === 'won' ? 'Убийцы пойманы!' : 'Мафия победила.'}
+                </h2>
+
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  {gameState.phase === 'won'
+                    ? 'Вы успешно установили личности преступников и спасли город.'
+                    : (gameState.loseReason ?? 'Мафия получила большинство голосов.')}
+                </p>
+
+                {/* List of mafia */}
+                <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 text-left space-y-3 shadow-lg">
+                  <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider block border-b border-zinc-850 pb-2">Убийцы:</span>
+                  {gameState.villagers
+                    .filter(v => v.role === 'mafia')
+                    .map(v => (
+                      <div key={v.id} className="flex items-center gap-3">
+                        <Avatar seed={v.name} className="w-8 h-8 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-zinc-200">{v.name}</div>
+                          <div className="text-[10px] text-zinc-500 truncate">{v.profession}</div>
+                        </div>
+                        <span className={`text-[9px] font-bold uppercase tracking-wider ${v.status === 'exiled' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          {v.status === 'exiled' ? 'пойман' : 'на свободе'}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+
+                <AnimatedButton
+                  onClick={handleReplay}
+                  variant="primary"
+                  className="w-full py-3 bg-purple-600 hover:bg-purple-500 font-bold rounded-xl"
+                >
+                  Играть снова
+                </AnimatedButton>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
-
-      {showVoteModal && (
-        <VoteModal
-          aliveVillagers={aliveVillagers}
-          onConfirm={handleVoteConfirm}
-          onCancel={() => setShowVoteModal(false)}
-        />
-      )}
-
-      {gameState.phase === 'night' && (
-        <NightScreen
-          narration={nightNarration}
-          onContinue={handleContinueFromNight}
-        />
-      )}
-
-      {(gameState.phase === 'won' || gameState.phase === 'lost') && (
-        <EndScreen gameState={gameState} onReplay={handleReplay} />
-      )}
-    </div>
+    </PageTransition>
   );
 }
