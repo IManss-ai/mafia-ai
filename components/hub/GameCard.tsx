@@ -5,30 +5,28 @@ import Link from 'next/link';
 interface Props {
   title: string;
   subtitle: string;
-  gradient: string;
   playUrl?: string;
   isSoon?: boolean;
 }
 
-export default function GameCard({ title, subtitle, gradient, playUrl, isSoon = false }: Props) {
+export default function GameCard({ title, subtitle, playUrl, isSoon = false }: Props) {
   const cardContent = (
-    <div className={`h-48 w-64 rounded-2xl p-5 border border-gray-800 flex flex-col justify-between select-none relative overflow-hidden bg-gradient-to-b ${gradient}`}>
-      <div className="absolute inset-0 bg-black/10 pointer-events-none" />
-      <div>
-        <h3 className="text-gray-100 font-bold text-lg leading-tight">{title}</h3>
-        <p className="text-gray-400 text-xs mt-1.5 leading-relaxed">{subtitle}</p>
+    <div className="h-[240px] w-[200px] rounded-[24px] p-4 border border-gray-800 flex flex-col justify-between select-none relative bg-[#1a1a1a] shadow-lg">
+      <div className="flex flex-col">
+        <h3 className="text-gray-100 font-extrabold text-base leading-tight mt-1">{title}</h3>
+        <p className="text-gray-400 text-[11px] mt-2 leading-relaxed">{subtitle}</p>
       </div>
       <div>
         {isSoon ? (
           <button
             disabled
-            className="w-full py-2 bg-gray-900/60 text-gray-500 text-xs font-semibold rounded-xl transition-all cursor-not-allowed select-none"
+            className="w-full py-2.5 bg-gray-900 text-gray-650 text-xs font-semibold rounded-xl transition-all cursor-not-allowed select-none border border-gray-850"
           >
             Скоро
           </button>
         ) : (
           <button
-            className="w-full py-2 bg-red-800 hover:bg-red-700 text-white text-xs font-semibold rounded-xl transition-colors select-none"
+            className="w-full py-2.5 bg-red-800 hover:bg-red-750 text-white text-xs font-semibold rounded-xl transition-colors select-none shadow-[0_2px_8px_rgba(153,27,27,0.3)]"
           >
             Играть
           </button>
@@ -39,8 +37,8 @@ export default function GameCard({ title, subtitle, gradient, playUrl, isSoon = 
 
   return (
     <motion.div
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.15 }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      transition={{ duration: 0.2 }}
       className="flex-shrink-0"
     >
       {playUrl && !isSoon ? (

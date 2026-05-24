@@ -7,21 +7,29 @@ interface Props {
 
 export default function TopBar({ onOpenProfile, onOpenSettings }: Props) {
   return (
-    <div className="h-16 border-b border-gray-800 bg-gray-950/40 px-6 flex items-center justify-between">
+    <div className="h-16 border-b border-gray-800 bg-gray-950/60 backdrop-blur-md px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-40">
+      {/* Left: Logo */}
+      <div className="flex items-center select-none">
+        <span className="text-gray-100 font-extrabold text-base tracking-wider bg-gradient-to-r from-red-500 to-amber-500 bg-clip-text text-transparent">
+          WePlay KZ
+        </span>
+      </div>
+
+      {/* Center: Profile Interactivity */}
       <div
         onClick={onOpenProfile}
-        className="flex items-center gap-3 select-none cursor-pointer hover:bg-gray-900/40 px-2.5 py-1.5 rounded-xl transition-colors"
+        className="flex items-center gap-2 select-none cursor-pointer hover:bg-gray-900/50 px-3 py-1.5 rounded-xl transition-all active:scale-95 border border-transparent hover:border-gray-800/40"
       >
         <span className="text-gray-100 font-bold text-sm">Мансур</span>
-        <span className="px-2 py-0.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-[9px] font-extrabold rounded-md shadow-[0_0_8px_rgba(245,158,11,0.3)]">
+        <span className="px-1.5 py-0.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-[8px] font-extrabold rounded-md shadow-[0_0_8px_rgba(245,158,11,0.35)]">
           VIP
         </span>
       </div>
 
-      <div className="flex items-center gap-6">
+      {/* Right: Coins and Settings */}
+      <div className="flex items-center gap-4">
         <div className="flex items-center gap-1.5 px-3 py-1 bg-gray-900 border border-gray-800 rounded-full select-none shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]">
-          <span className="text-amber-500 text-xs font-bold font-mono">₸</span>
-          <span className="text-gray-200 text-xs font-bold font-mono">4,567</span>
+          <span className="text-gray-200 text-xs font-bold font-mono">4,567 ₸</span>
         </div>
 
         <button

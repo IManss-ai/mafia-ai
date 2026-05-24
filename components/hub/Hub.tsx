@@ -8,6 +8,7 @@ import FriendsList from './FriendsList';
 
 export default function Hub() {
   const [onlineCount, setOnlineCount] = useState(234);
+  const [radius, setRadius] = useState(125);
   const [showProfile, setShowProfile] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [selectedGift, setSelectedGift] = useState<string | null>(null);
@@ -19,54 +20,54 @@ export default function Hub() {
   const [theme, setTheme] = useState('night-almaty');
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setOnlineCount(prev => {
-        const diff = Math.floor(Math.random() * 21) - 10;
-        const next = prev + diff;
-        return Math.max(180, Math.min(300, next));
-      });
-    }, 4000);
+    setOnlineCount(Math.floor(Math.random() * (300 - 180 + 1)) + 180);
 
-    return () => clearInterval(interval);
+    const handleResize = () => {
+      setRadius(window.innerWidth < 768 ? 85 : 125);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const ringAvatars = [
     { initials: 'АЙ', name: 'Айбек', color: 'bg-emerald-600', angle: 0 },
-    { initials: 'ДИ', name: 'Диана', color: 'bg-rose-600', angle: 72 },
-    { initials: 'АС', name: 'Аслан', color: 'bg-blue-600', angle: 144 },
-    { initials: 'КА', name: 'Камилла', color: 'bg-violet-600', angle: 216 },
-    { initials: 'ТЕ', name: 'Темирлан', color: 'bg-amber-600', angle: 288 },
+    { initials: 'ДИ', name: 'Диана', color: 'bg-rose-650', angle: 60 },
+    { initials: 'АС', name: 'Аслан', color: 'bg-blue-600', angle: 120 },
+    { initials: 'КА', name: 'Камилла', color: 'bg-violet-600', angle: 180 },
+    { initials: 'ТЕ', name: 'Темирлан', color: 'bg-amber-650', angle: 240 },
+    { initials: 'ЖА', name: 'Жанар', color: 'bg-indigo-600', angle: 300 },
   ];
-
-  const R = 110;
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-screen bg-gray-950 flex flex-col overflow-hidden text-gray-100 relative"
+      className="h-screen bg-[#0a0a0a] flex flex-col overflow-hidden text-gray-100 relative"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-gray-950 to-gray-950 -z-10 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-[linear-gradient(to_top,_rgba(15,23,42,0.1),_transparent)] pointer-events-none -z-10">
-        <svg className="absolute bottom-0 w-full text-gray-900/10 h-32 fill-current" viewBox="0 0 1440 200" preserveAspectRatio="none">
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-[#0d0d0d] to-[#1a1a1a] -z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-[linear-gradient(to_top,_rgba(10,10,10,0.15),_transparent)] pointer-events-none -z-10 opacity-10">
+        <svg className="absolute bottom-0 w-full text-gray-800/10 h-32 fill-current" viewBox="0 0 1440 200" preserveAspectRatio="none">
           <path d="M0,160 L120,130 C240,100,480,40,720,60 C960,80,1200,180,1320,230 L1440,280 L1440,300 L1320,300 C1200,300,960,300,720,300 C480,300,240,300,120,300 L0,300 Z" />
         </svg>
       </div>
 
       <TopBar onOpenProfile={() => setShowProfile(true)} onOpenSettings={() => setShowSettings(true)} />
 
-      <div className="flex-1 flex overflow-hidden">
-        <div className="flex-1 flex flex-col justify-between p-6 overflow-y-auto">
-          <div className="flex justify-center">
-            <div className="px-4 py-1.5 bg-gray-900/60 border border-gray-800 rounded-full text-xs text-green-400 font-medium select-none shadow-[0_0_12px_rgba(74,222,128,0.1)]">
-              Сейчас онлайн: {onlineCount} игроков
-            </div>
+      <div className="flex-1 flex overflow-hidden pt-16">
+        <div className="flex-1 flex flex-col justify-between py-4 px-6 overflow-y-auto md:pr-[240px]">
+          {/* Header Party Label */}
+          <div className="flex justify-center mt-2">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-gray-500 font-bold select-none">
+              Алматинская вечеринка
+            </span>
           </div>
 
-          <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
-            <div className="absolute w-[240px] h-[240px] border border-gray-800/40 rounded-full pointer-events-none flex items-center justify-center">
-              <div className="w-[120px] h-[120px] border border-gray-800/40 rounded-full" />
+          {/* Circular Room */}
+          <div className="flex-1 flex items-center justify-center relative min-h-[280px]">
+            <div className="absolute w-[170px] h-[170px] md:w-[250px] md:h-[250px] border border-gray-800/40 rounded-full pointer-events-none flex items-center justify-center">
+              <div className="w-[90px] h-[90px] md:w-[130px] md:h-[130px] border border-gray-800/40 rounded-full" />
             </div>
 
             <button onClick={() => setShowProfile(true)} className="absolute z-10 hover:scale-105 active:scale-95 transition-all outline-none focus:outline-none">
@@ -81,13 +82,13 @@ export default function Hub() {
 
             {ringAvatars.map((av, idx) => {
               const rad = (av.angle * Math.PI) / 180;
-              const x = R * Math.cos(rad);
-              const y = R * Math.sin(rad);
+              const x = radius * Math.cos(rad);
+              const y = radius * Math.sin(rad);
 
               return (
                 <div
                   key={idx}
-                  className="absolute z-0"
+                  className="absolute z-0 transition-transform duration-300"
                   style={{
                     transform: `translate(${x}px, ${y}px)`,
                   }}
@@ -102,41 +103,54 @@ export default function Hub() {
             })}
           </div>
 
+          {/* Glowing Activity Banner */}
+          <div className="flex justify-center mb-6">
+            <div className="px-4 py-2 bg-gray-900/60 border border-amber-500/35 rounded-full text-xs text-amber-400 font-semibold select-none shadow-[0_0_15px_rgba(245,158,11,0.12)] flex items-center gap-1.5 backdrop-blur-md">
+              <span>🎲 Сейчас играют {onlineCount} человека</span>
+            </div>
+          </div>
+
+          {/* Game Selection Carousel */}
           <div className="w-full flex flex-col space-y-3">
-            <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider select-none">
-              Игры на платформе
+            <h4 className="text-gray-500 text-[10px] font-bold uppercase tracking-wider select-none px-1">
+              Игры на вечеринке
             </h4>
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin select-none">
-              <GameCard
-                title="Алматинская Мафия"
-                subtitle="Допроси 6 жителей на Кок-Тобе. Вычисли двух мафиози в Russian-Almaty сеттинге."
-                gradient="from-red-950/40 to-black"
-                playUrl="/mafia"
-              />
-              <GameCard
-                title="Кто Шпион?"
-                subtitle="Местный шпионский баттл слов. Найди шпиона среди пяти жителей Алматы."
-                gradient="from-blue-950/40 to-black"
-                playUrl="/spy"
-              />
-              <GameCard
-                title="Угадай Слово"
-                subtitle="Скоростное разгадывание казахских слов и ассоциаций с умным ИИ."
-                gradient="from-gray-900/40 to-black"
-                isSoon={true}
-              />
-              <GameCard
-                title="Айтыс AI"
-                subtitle="Интерактивный поэтический айтыс-поединок с импровизацией."
-                gradient="from-gray-900/40 to-black"
-                isSoon={true}
-              />
-              <GameCard
-                title="Каракол"
-                subtitle="Головоломка побега и дедукции в подземельях Чарынского каньона."
-                gradient="from-gray-900/40 to-black"
-                isSoon={true}
-              />
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory px-1 md:justify-center md:overflow-x-visible md:pb-0 select-none">
+              <div className="snap-center">
+                <GameCard
+                  title="Алматинская Мафия"
+                  subtitle="Вычислите двух мафиози среди 6 жителей Кок-Тобе."
+                  playUrl="/mafia"
+                />
+              </div>
+              <div className="snap-center">
+                <GameCard
+                  title="Кто Шпион?"
+                  subtitle="Найдите шпиона среди жителей Алматы."
+                  playUrl="/spy"
+                />
+              </div>
+              <div className="snap-center">
+                <GameCard
+                  title="Угадай Слово"
+                  subtitle="Разгадывайте казахские слова с умным ИИ."
+                  isSoon={true}
+                />
+              </div>
+              <div className="snap-center">
+                <GameCard
+                  title="Айтыс"
+                  subtitle="Импровизируйте в поэтическом поединке с ИИ."
+                  isSoon={true}
+                />
+              </div>
+              <div className="snap-center">
+                <GameCard
+                  title="Каракол"
+                  subtitle="Разгадайте тайны Чарынского каньона."
+                  isSoon={true}
+                />
+              </div>
             </div>
           </div>
         </div>

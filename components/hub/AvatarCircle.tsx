@@ -12,9 +12,9 @@ interface Props {
 
 export default function AvatarCircle({ initials, name, color, size = 'md', isCenter = false, className = '' }: Props) {
   const sizeClasses = {
-    sm: 'w-10 h-10 text-xs',
-    md: 'w-14 h-14 text-sm',
-    lg: 'w-24 h-24 text-xl',
+    sm: 'w-8 h-8 text-[10px]',
+    md: 'w-10 h-10 md:w-14 md:h-14 text-xs md:text-sm',
+    lg: 'w-14 h-14 md:w-20 md:h-20 text-sm md:text-lg',
   };
 
   return (
@@ -35,7 +35,7 @@ export default function AvatarCircle({ initials, name, color, size = 'md', isCen
               ],
         }}
         transition={{
-          duration: 2.5,
+          duration: 2,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
