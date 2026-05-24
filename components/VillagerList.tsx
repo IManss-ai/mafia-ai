@@ -8,9 +8,19 @@ interface Props {
   onSelect: (id: string) => void;
   onVote: () => void;
   day: number;
+  isLoading?: boolean;
+  onToggleSuspect?: (id: string) => void;
 }
 
-export default function VillagerList({ villagers, selectedId, onSelect, onVote, day }: Props) {
+export default function VillagerList({
+  villagers,
+  selectedId,
+  onSelect,
+  onVote,
+  day,
+  isLoading,
+  onToggleSuspect,
+}: Props) {
   const aliveCount = villagers.filter(v => v.status === 'alive').length;
 
   return (
@@ -27,14 +37,16 @@ export default function VillagerList({ villagers, selectedId, onSelect, onVote, 
             villager={v}
             isSelected={selectedId === v.id}
             onClick={() => onSelect(v.id)}
+            onToggleSuspect={onToggleSuspect ? () => onToggleSuspect(v.id) : undefined}
           />
         ))}
       </div>
 
       <div className="p-4 border-t border-gray-800">
         <button
+          disabled={isLoading}
           onClick={onVote}
-          className="w-full py-2.5 px-4 bg-red-800 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="w-full py-2.5 px-4 bg-red-800 hover:bg-red-700 disabled:opacity-40 text-white text-sm font-medium rounded-lg transition-colors"
         >
           Проголосовать за изгнание
         </button>

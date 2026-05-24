@@ -78,6 +78,10 @@ export default function GamePage() {
       });
 
       const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error ?? 'Chat request failed');
+      }
+
       if (data.response) {
         const assistantMsg: ChatMessage = { role: 'assistant', content: data.response };
         updateState(s => ({
@@ -90,6 +94,17 @@ export default function GamePage() {
       }
     } catch (err) {
       console.error('Chat error:', err);
+      const assistantMsg: ChatMessage = {
+        role: 'assistant',
+        content: 'Связь сорвалась. Повторите вопрос короче или выберите другого подозреваемого.',
+      };
+      updateState(s => ({
+        ...s,
+        chatHistories: {
+          ...s.chatHistories,
+          [selectedId]: [...(s.chatHistories[selectedId] ?? []), assistantMsg],
+        },
+      }));
     } finally {
       setIsLoading(false);
     }
@@ -134,6 +149,15 @@ export default function GamePage() {
     await runNightPhase(nightState);
   };
 
+  const handleToggleSuspect = (id: string) => {
+    updateState(s => ({
+      ...s,
+      villagers: s.villagers.map(v =>
+        v.id === id ? { ...v, suspected: !v.suspected } : v
+      ),
+    }));
+  };
+
   const runNightPhase = async (state: GameState) => {
     const alive = state.villagers.filter(v => v.status === 'alive');
     const mafiaIds = state.villagers
@@ -151,35 +175,70 @@ export default function GamePage() {
         }),
       });
 
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
+      }
+
       const data = await res.json();
-      if (data.killedVillagerId && data.narration) {
-        setNightNarration(data.narration);
+      if (!data.killedVillagerId || !data.narration) {
+        throw new Error('Invalid night response structure');
+      }
 
-        const afterKill: GameState = {
-          ...state,
-          villagers: state.villagers.map(v =>
-            v.id === data.killedVillagerId ? { ...v, status: 'dead' as const } : v
-          ),
-          nightLog: [...state.nightLog, data.narration],
+      setNightNarration(data.narration);
+
+      const afterKill: GameState = {
+        ...state,
+        villagers: state.villagers.map(v =>
+          v.id === data.killedVillagerId ? { ...v, status: 'dead' as const } : v
+        ),
+        nightLog: [...state.nightLog, data.narration],
+      };
+
+      const winCheck = checkWinCondition({ ...afterKill, phase: 'night' });
+      if (winCheck !== 'playing') {
+        const final = {
+          ...afterKill,
+          phase: winCheck as 'won' | 'lost',
+          loseReason: winCheck === 'lost' ? 'Три ночи прошло. Мафия победила.' : undefined,
         };
-
-        const winCheck = checkWinCondition({ ...afterKill, phase: 'night' });
-        if (winCheck !== 'playing') {
-          const final = {
-            ...afterKill,
-            phase: winCheck as 'won' | 'lost',
-            loseReason: winCheck === 'lost' ? 'Три ночи прошло. Мафия победила.' : undefined,
-          };
-          setGameState(final);
-          saveState(final);
-        } else {
-          setGameState(afterKill);
-          saveState(afterKill);
-        }
+        setGameState(final);
+        saveState(final);
+      } else {
+        setGameState(afterKill);
+        saveState(afterKill);
       }
     } catch (err) {
       console.error('Night phase error:', err);
-      setNightNarration('Ночь прошла тихо. Утром все оказались живы.');
+      // Fallback: kill a random civilian so the game loop is preserved
+      const civilians = state.villagers.filter(v => v.status === 'alive' && v.role === 'civilian');
+      const target = civilians.length > 0
+        ? civilians[Math.floor(Math.random() * civilians.length)]
+        : alive[Math.floor(Math.random() * alive.length)];
+
+      const fallbackNarration = `Ночью произошло нападение. Нашли ${target.name} на улицах города.`;
+      setNightNarration(fallbackNarration);
+
+      const afterKill: GameState = {
+        ...state,
+        villagers: state.villagers.map(v =>
+          v.id === target.id ? { ...v, status: 'dead' as const } : v
+        ),
+        nightLog: [...state.nightLog, fallbackNarration],
+      };
+
+      const winCheck = checkWinCondition({ ...afterKill, phase: 'night' });
+      if (winCheck !== 'playing') {
+        const final = {
+          ...afterKill,
+          phase: winCheck as 'won' | 'lost',
+          loseReason: winCheck === 'lost' ? 'Три ночи прошло. Мафия победила.' : undefined,
+        };
+        setGameState(final);
+        saveState(final);
+      } else {
+        setGameState(afterKill);
+        saveState(afterKill);
+      }
     }
   };
 
@@ -222,6 +281,8 @@ export default function GamePage() {
           onSelect={setSelectedId}
           onVote={() => setShowVoteModal(true)}
           day={gameState.day}
+          isLoading={isLoading}
+          onToggleSuspect={handleToggleSuspect}
         />
       </div>
 

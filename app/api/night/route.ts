@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { callGeminiForJSON } from '@/lib/gemini';
+import { buildFallbackNight } from '@/lib/fallback';
 import { buildNightPrompt } from '@/lib/prompts';
 import { NightRequest, NightResponse } from '@/lib/types';
 
@@ -21,7 +22,13 @@ export async function POST(req: NextRequest) {
       dayNumber
     );
 
-    const result = await callGeminiForJSON(prompt) as NightResponse;
+    let result: NightResponse;
+    try {
+      result = await callGeminiForJSON(prompt) as NightResponse;
+    } catch (err) {
+      console.error('/api/night Gemini fallback:', err);
+      return NextResponse.json(buildFallbackNight(targets, dayNumber));
+    }
 
     if (!result.killedVillagerId || !result.narration) {
       throw new Error('Invalid response structure from Gemini');

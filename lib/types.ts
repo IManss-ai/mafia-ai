@@ -16,6 +16,7 @@ export interface Character {
 export interface Villager extends Character {
   role: Role;
   status: VillagerStatus;
+  suspected?: boolean;
 }
 
 export interface ChatMessage {

@@ -45,27 +45,46 @@ export default function ChatPanel({ villager, history, onSendMessage, isLoading 
             Начните допрос. Задайте вопрос.
           </p>
         )}
-        {history.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div
-              className={`max-w-[75%] rounded-lg px-4 py-2.5 text-sm leading-relaxed
-                ${msg.role === 'user'
-                  ? 'bg-gray-700 text-gray-100'
-                  : 'bg-gray-800 text-gray-200'
-                }`}
-            >
-              {msg.content}
+        {history.map((msg, i) => {
+          const isUser = msg.role === 'user';
+          return (
+            <div key={i} className={`flex gap-2.5 items-start ${isUser ? 'justify-end' : 'justify-start'}`}>
+              {!isUser && (
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 ${villager.color}`}>
+                  {initials}
+                </div>
+              )}
+              <div className="flex flex-col max-w-[75%]">
+                {!isUser && (
+                  <span className="text-[10px] text-gray-500 ml-1 mb-1">{villager.name}</span>
+                )}
+                <div
+                  className={`rounded-lg px-4 py-2.5 text-sm leading-relaxed
+                    ${isUser
+                      ? 'bg-gray-700 text-gray-100 rounded-tr-none'
+                      : 'bg-gray-800 text-gray-200 rounded-tl-none'
+                    }`}
+                >
+                  {msg.content}
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {isLoading && (
-          <div className="flex justify-start">
-            <div className="bg-gray-800 rounded-lg px-4 py-3 text-sm text-gray-400">
-              <span className="inline-flex gap-1">
-                <span className="animate-bounce [animation-delay:0ms]">.</span>
-                <span className="animate-bounce [animation-delay:150ms]">.</span>
-                <span className="animate-bounce [animation-delay:300ms]">.</span>
-              </span>
+          <div className="flex gap-2.5 items-start justify-start">
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 ${villager.color}`}>
+              {initials}
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[10px] text-gray-500 ml-1 mb-1">{villager.name}</span>
+              <div className="bg-gray-800 text-gray-400 rounded-lg rounded-tl-none px-4 py-3 text-sm">
+                <span className="inline-flex gap-1">
+                  <span className="animate-bounce [animation-delay:0ms]">.</span>
+                  <span className="animate-bounce [animation-delay:150ms]">.</span>
+                  <span className="animate-bounce [animation-delay:300ms]">.</span>
+                </span>
+              </div>
             </div>
           </div>
         )}
