@@ -1,14 +1,23 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ChatMessage } from './types';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
+const apiKey = process.env.GOOGLE_API_KEY;
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
+
+function getGeminiClient() {
+  if (!genAI) {
+    throw new Error('GOOGLE_API_KEY is not set');
+  }
+
+  return genAI;
+}
 
 export async function callGemini(
   systemPrompt: string,
   history: ChatMessage[],
   userMessage: string
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({
+  const model = getGeminiClient().getGenerativeModel({
     model: 'gemini-1.5-flash',
     systemInstruction: systemPrompt,
   });
@@ -24,7 +33,7 @@ export async function callGemini(
 }
 
 export async function callGeminiForJSON(prompt: string): Promise<unknown> {
-  const model = genAI.getGenerativeModel({
+  const model = getGeminiClient().getGenerativeModel({
     model: 'gemini-1.5-flash',
   });
 
