@@ -12,6 +12,7 @@ export function createInitialState(): GameState {
     ...char,
     role: mafiaIndices.has(i) ? 'mafia' : 'civilian',
     status: 'alive',
+    suspicion: 0,
   }));
 
   return {

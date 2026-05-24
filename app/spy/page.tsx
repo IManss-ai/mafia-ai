@@ -23,6 +23,7 @@ export default function SpyPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
   const [votedId, setVotedId] = useState<string | null>(null);
+  const [aiVotes, setAiVotes] = useState<Record<string, string>>({});
 
   // Initialize a fresh round
   const initRound = (nextRoundNum: number) => {
@@ -43,6 +44,7 @@ export default function SpyPage() {
     setDescriptions([]);
     setGamePhase('playing');
     setVotedId(null);
+    setAiVotes({});
     setInput('');
     setIsLoading(false);
   };
@@ -64,7 +66,8 @@ export default function SpyPage() {
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [gamePhase, turnIndex, order]); // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gamePhase, turnIndex, order]);
 
   const runAITurn = async (characterId: string) => {
     const character = SPY_CHARACTERS.find(c => c.id === characterId)!;
@@ -125,6 +128,31 @@ export default function SpyPage() {
 
   const handleVote = (targetId: string) => {
     setVotedId(targetId);
+    
+    // Simulate AI votes
+    const playersList = ['player', 'aigeri', 'daniyar', 'zhanna', 'erbol'];
+    const simulatedVotes: Record<string, string> = {};
+    
+    playersList.forEach((charId) => {
+      if (charId === 'player') return;
+      
+      const isSpy = spyId === charId;
+      if (isSpy) {
+        // Spy votes for a random civilian (anyone except themselves)
+        const targets = playersList.filter(p => p !== charId);
+        simulatedVotes[charId] = targets[Math.floor(Math.random() * targets.length)];
+      } else {
+        // Civilians have a high chance to vote for the true spy (75%), or a random other player (25%)
+        if (Math.random() < 0.75) {
+          simulatedVotes[charId] = spyId;
+        } else {
+          const targets = playersList.filter(p => p !== charId);
+          simulatedVotes[charId] = targets[Math.floor(Math.random() * targets.length)];
+        }
+      }
+    });
+    
+    setAiVotes(simulatedVotes);
     setGamePhase('reveal');
   };
 
@@ -225,6 +253,29 @@ export default function SpyPage() {
               );
             })}
           </div>
+
+          {/* Active Speaker Timer Bar */}
+          {gamePhase === 'playing' && (
+            <div className="w-full max-w-2xl mx-auto mb-4 flex items-center justify-between text-xs px-2 text-gray-500 select-none">
+              <span className="font-medium">
+                Ход: <span className="text-blue-400 font-semibold">{getSuspectName(currentSpeakerId)}</span>
+              </span>
+              <div className="w-48 bg-gray-900 h-1 rounded-full overflow-hidden border border-gray-850">
+                <motion.div
+                  key={currentSpeakerId}
+                  initial={{ width: '0%' }}
+                  animate={{ width: '100%' }}
+                  transition={{ duration: currentSpeakerId === 'player' ? 0 : 2, ease: 'linear' }}
+                  className={`h-full rounded-full ${
+                    currentSpeakerId === 'player' 
+                      ? 'bg-amber-500 w-full animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)]' 
+                      : 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]'
+                  }`}
+                  style={currentSpeakerId === 'player' ? { width: '100%' } : {}}
+                />
+              </div>
+            </div>
+          )}
 
           {/* Descriptions list area */}
           <div className="flex-1 bg-gray-900/40 border border-gray-800 rounded-2xl p-4 overflow-y-auto space-y-4 max-w-2xl mx-auto w-full">
@@ -381,6 +432,64 @@ export default function SpyPage() {
                     ? `Вы верно вычислили шпиона! Им был ${getSuspectName(spyId)}.`
                     : `Вы не смогли поймать шпиона. Шпионом был ${getSuspectName(spyId)}.`}
                 </p>
+
+                {won && (
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="flex flex-col items-center justify-center p-4 bg-gradient-to-b from-yellow-950/20 to-amber-950/30 border border-yellow-500/30 rounded-2xl relative overflow-hidden shadow-[0_0_16px_rgba(245,158,11,0.05)] select-none"
+                  >
+                    <div className="absolute inset-0 pointer-events-none opacity-25">
+                      <motion.span
+                        animate={{ y: [30, -10], opacity: [0, 1, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: 0.2 }}
+                        className="absolute left-6 text-yellow-400 text-xs font-bold font-mono"
+                      >
+                        ₸
+                      </motion.span>
+                      <motion.span
+                        animate={{ y: [40, 0], opacity: [0, 1, 0] }}
+                        transition={{ duration: 2.2, repeat: Infinity, delay: 0.8 }}
+                        className="absolute right-8 text-yellow-400 text-[10px] font-bold font-mono"
+                      >
+                        ₸
+                      </motion.span>
+                      <motion.span
+                        animate={{ y: [25, -15], opacity: [0, 1, 0] }}
+                        transition={{ duration: 1.8, repeat: Infinity, delay: 1.3 }}
+                        className="absolute left-20 text-yellow-400 text-[9px] font-bold font-mono"
+                      >
+                        ₸
+                      </motion.span>
+                    </div>
+
+                    <motion.div
+                      animate={{ y: [0, -5, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="w-12 h-12 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 flex items-center justify-center text-black font-extrabold text-base shadow-[0_0_20px_rgba(245,158,11,0.4)] border border-yellow-300 select-none mb-2"
+                    >
+                      ₸
+                    </motion.div>
+                    <span className="text-yellow-400 font-bold text-xs tracking-wide">+150 ₸ за победу</span>
+                    <span className="text-[9px] text-gray-500 mt-0.5">Коины зачислены в профиль</span>
+                  </motion.div>
+                )}
+
+                <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-4 text-left space-y-3.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] select-none">
+                  <div className="text-[10px] font-bold text-gray-400 border-b border-gray-800 pb-2">Голоса игроков</div>
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Вы (Мансур)</span>
+                      <span className="text-gray-300 font-semibold">→ {getSuspectName(votedId ?? '')}</span>
+                    </div>
+                    {Object.entries(aiVotes).map(([voterId, targetId]) => (
+                      <div key={voterId} className="flex items-center justify-between">
+                        <span className="text-gray-500">{getSuspectName(voterId)}</span>
+                        <span className="text-gray-300 font-semibold">→ {getSuspectName(targetId)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
                 <div className="bg-gray-900/80 border border-gray-800 rounded-2xl p-4 text-left space-y-3.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] select-none">
                   <div className="flex items-center justify-between text-xs border-b border-gray-800 pb-2">

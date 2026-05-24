@@ -149,11 +149,11 @@ export default function GamePage() {
     await runNightPhase(nightState);
   };
 
-  const handleToggleSuspect = (id: string) => {
+  const handleSuspicionChange = (id: string, value: number) => {
     updateState(s => ({
       ...s,
       villagers: s.villagers.map(v =>
-        v.id === id ? { ...v, suspected: !v.suspected } : v
+        v.id === id ? { ...v, suspicion: value } : v
       ),
     }));
   };
@@ -288,7 +288,7 @@ export default function GamePage() {
           onVote={() => setShowVoteModal(true)}
           day={gameState.day}
           isLoading={isLoading}
-          onToggleSuspect={handleToggleSuspect}
+          onSuspicionChange={handleSuspicionChange}
         />
       </div>
 

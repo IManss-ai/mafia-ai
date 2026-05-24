@@ -5,7 +5,7 @@ interface Props {
   villager: Villager;
   isSelected: boolean;
   onClick: () => void;
-  onToggleSuspect?: () => void;
+  onSuspicionChange?: (value: number) => void;
 }
 
 const STATUS_LABELS: Record<string, string> = {
@@ -14,55 +14,75 @@ const STATUS_LABELS: Record<string, string> = {
   exiled: 'изгнан',
 };
 
-export default function VillagerCard({ villager, isSelected, onClick, onToggleSuspect }: Props) {
+export default function VillagerCard({ villager, isSelected, onClick, onSuspicionChange }: Props) {
   const isDead = villager.status !== 'alive';
   const initials = villager.name.slice(0, 2).toUpperCase();
+  const suspicionValue = villager.suspicion ?? 0;
+  
+  const suspicionColor = suspicionValue > 60 
+    ? 'text-red-400 font-bold' 
+    : suspicionValue > 25 
+      ? 'text-amber-400 font-bold' 
+      : 'text-gray-400';
+
+  const accentClass = suspicionValue > 60 
+    ? 'accent-red-500' 
+    : suspicionValue > 25 
+      ? 'accent-amber-500' 
+      : 'accent-green-500';
 
   return (
-    <div className="relative group">
-      <button
-        onClick={onClick}
-        disabled={isDead}
-        className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors
-          ${isDead ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-800'}
-          ${isSelected && !isDead ? 'bg-gray-800 ring-1 ring-gray-600' : ''}
-        `}
-      >
+    <div
+      onClick={isDead ? undefined : onClick}
+      className={`w-full flex flex-col gap-2 p-3 rounded-xl transition-all border select-none
+        ${isDead ? 'opacity-40 cursor-not-allowed border-gray-900 bg-gray-950/20' : 'cursor-pointer'}
+        ${isSelected && !isDead 
+          ? 'bg-gray-900 border-amber-500/80 shadow-[0_0_12px_rgba(245,158,11,0.15)]' 
+          : 'bg-gray-950/40 border-gray-800/85 hover:border-gray-700/80 hover:bg-gray-900/30'
+        }
+      `}
+    >
+      <div className="flex items-center gap-3">
         <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${villager.color}`}
+          className={`w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold flex-shrink-0 ${villager.color} shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)]`}
         >
           {initials}
         </div>
-        <div className="min-w-0 flex-1 pr-6" title={`${villager.name} — ${villager.profession}`}>
-          <div className={`text-sm font-medium text-gray-100 truncate ${isDead ? 'line-through' : ''}`}>
-            {villager.name}
+        <div className="min-w-0 flex-1">
+          <div className={`text-sm font-bold text-gray-100 flex items-center justify-between ${isDead ? 'line-through text-gray-500' : ''}`}>
+            <span>{villager.name}</span>
+            {!isDead && <span className="text-[10px] text-gray-500 font-mono font-medium">{villager.age} лет</span>}
           </div>
-          <div className="text-xs text-gray-400 truncate">{villager.profession}</div>
+          <div className="text-[11px] text-gray-400 truncate mt-0.5">{villager.profession}</div>
           {isDead && (
-            <div className={`text-xs mt-0.5 ${villager.status === 'exiled' ? 'text-red-400' : 'text-gray-500'}`}>
+            <span className={`text-[10px] uppercase font-bold tracking-wider inline-block mt-1 px-1.5 py-0.5 rounded ${villager.status === 'exiled' ? 'bg-red-950/40 text-red-400 border border-red-900/40' : 'bg-gray-950/40 text-gray-500 border border-gray-900'}`}>
               {STATUS_LABELS[villager.status]}
-            </div>
+            </span>
           )}
         </div>
-      </button>
+      </div>
 
-      {!isDead && onToggleSuspect && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleSuspect();
-          }}
-          title={villager.suspected ? 'Снять подозрение' : 'Пометить как подозреваемого'}
-          className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-md transition-colors z-10
-            ${villager.suspected
-              ? 'text-red-400 bg-red-950/40 border border-red-900/60 hover:bg-red-900/30'
-              : 'text-gray-600 hover:text-gray-400 hover:bg-gray-800 opacity-0 group-hover:opacity-100 focus:opacity-100'
-            }`}
+      {!isDead && onSuspicionChange && (
+        <div 
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          className="mt-1 pt-1.5 border-t border-gray-800/60"
         >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-        </button>
+          <div className="flex justify-between items-center text-[9px] font-mono tracking-wider font-bold mb-1 select-none">
+            <span className="text-gray-500">ШКАЛА ПОДОЗРЕНИЯ</span>
+            <span className={suspicionColor}>
+              {suspicionValue}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={suspicionValue}
+            onChange={(e) => onSuspicionChange(Number(e.target.value))}
+            className={`w-full h-1 bg-gray-950 rounded-lg appearance-none cursor-pointer focus:outline-none ${accentClass}`}
+          />
+        </div>
       )}
     </div>
   );

@@ -14,9 +14,14 @@ body {
 }
 
 /* Premium custom scrollbar styling */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #1f2937 #030712;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -25,9 +30,13 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: #1f2937;
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #374151;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #f59e0b;
 }

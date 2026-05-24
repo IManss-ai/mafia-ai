@@ -9,7 +9,7 @@ interface Props {
   onVote: () => void;
   day: number;
   isLoading?: boolean;
-  onToggleSuspect?: (id: string) => void;
+  onSuspicionChange?: (id: string, value: number) => void;
 }
 
 export default function VillagerList({
@@ -19,7 +19,7 @@ export default function VillagerList({
   onVote,
   day,
   isLoading,
-  onToggleSuspect,
+  onSuspicionChange,
 }: Props) {
   const aliveCount = villagers.filter(v => v.status === 'alive').length;
 
@@ -37,7 +37,7 @@ export default function VillagerList({
             villager={v}
             isSelected={selectedId === v.id}
             onClick={() => onSelect(v.id)}
-            onToggleSuspect={onToggleSuspect ? () => onToggleSuspect(v.id) : undefined}
+            onSuspicionChange={onSuspicionChange ? (val) => onSuspicionChange(v.id, val) : undefined}
           />
         ))}
       </div>
