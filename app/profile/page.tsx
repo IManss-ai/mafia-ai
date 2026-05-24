@@ -47,7 +47,7 @@ export default function ProfilePage() {
 
         {/* Profile Card */}
         <div className="bg-[#2B2D31] border border-[#3B3F45] rounded-2xl p-6 flex flex-col sm:flex-row gap-6 items-center">
-          <Avatar seed="Мансур" className="w-20 h-20 border-2 border-[#5865F2]" />
+          <Avatar seed="Мансур" className="w-20 h-20 border-2 border-[#14B8A6]" />
 
           <div className="flex-1 text-center sm:text-left space-y-2">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 justify-center sm:justify-start">
@@ -57,7 +57,7 @@ export default function ProfilePage() {
               </span>
             </div>
 
-            <p className="text-xs text-[#5865F2] font-bold">Уровень 12 — Эксперт Дедукции</p>
+            <p className="text-xs text-[#14B8A6] font-bold">Уровень 12 — Эксперт Дедукции</p>
 
             <div className="max-w-xs mx-auto sm:mx-0 space-y-1.5">
               <div className="flex justify-between text-[10px] text-[#B5BAC1] font-bold font-mono">
@@ -65,7 +65,7 @@ export default function ProfilePage() {
                 <span>1,420 / 2,000 XP</span>
               </div>
               <div className="w-full h-1.5 bg-[#1E1F22] border border-[#3B3F45] rounded-full overflow-hidden">
-                <div className="h-full bg-[#5865F2] rounded-full" style={{ width: '71%' }} />
+                <div className="h-full bg-[#14B8A6] rounded-full" style={{ width: '71%' }} />
               </div>
             </div>
           </div>
@@ -104,8 +104,8 @@ export default function ProfilePage() {
                   onClick={() => setSelectedGift(selected ? null : g.id)}
                   className={`flex flex-col items-center justify-center p-4 border rounded-2xl transition-all relative outline-none select-none
                     ${selected
-                      ? 'bg-[#5865F2]/10 border-[#5865F2]'
-                      : 'bg-[#2B2D31] border-[#3B3F45] hover:border-[#5865F2]/50 hover:bg-[#35373C]'
+                      ? 'bg-[#14B8A6]/10 border-[#14B8A6]'
+                      : 'bg-[#2B2D31] border-[#3B3F45] hover:border-[#14B8A6]/50 hover:bg-[#35373C]'
                     }`}
                 >
                   <span className="text-2xl mb-2">{g.icon}</span>
@@ -146,7 +146,7 @@ export default function ProfilePage() {
                 <div key={idx} className="bg-[#2B2D31] border border-[#3B3F45] rounded-2xl p-4 flex items-start gap-4">
                   <div className={`p-2.5 rounded-xl border flex-shrink-0
                     ${item.isUnlocked
-                      ? 'bg-[#5865F2]/10 border-[#5865F2]/30 text-[#5865F2]'
+                      ? 'bg-[#14B8A6]/10 border-[#14B8A6]/30 text-[#14B8A6]'
                       : 'bg-[#1E1F22] border-[#3B3F45] text-[#B5BAC1]'}`}>
                     <Icon className="w-5 h-5" />
                   </div>
@@ -154,7 +154,7 @@ export default function ProfilePage() {
                   <div className="flex-1 space-y-2 min-w-0">
                     <div className="flex items-center justify-between gap-2">
                       <h4 className="text-xs font-extrabold text-[#FFFFFF] truncate">{item.title}</h4>
-                      <span className="text-[9px] font-bold text-[#5865F2] font-mono whitespace-nowrap">{item.points}</span>
+                      <span className="text-[9px] font-bold text-[#14B8A6] font-mono whitespace-nowrap">{item.points}</span>
                     </div>
                     <p className="text-[11px] text-[#B5BAC1] leading-normal">{item.desc}</p>
 
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                       </div>
                       <div className="w-full h-1 bg-[#1E1F22] rounded-full overflow-hidden">
                         <div
-                          className={`h-full rounded-full ${item.isUnlocked ? 'bg-[#5865F2]' : 'bg-[#3B3F45]'}`}
+                          className={`h-full rounded-full ${item.isUnlocked ? 'bg-[#14B8A6]' : 'bg-[#3B3F45]'}`}
                           style={{ width: `${item.progress}%` }}
                         />
                       </div>

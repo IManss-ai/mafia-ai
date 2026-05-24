@@ -19,7 +19,7 @@ export default function AnimatedButton({
     'relative px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-2 select-none outline-none disabled:opacity-40 disabled:cursor-not-allowed';
 
   const variants = {
-    primary: 'bg-[#5865F2] hover:bg-[#4752C4] text-white',
+    primary: 'bg-[#14B8A6] hover:bg-[#0D9488] text-white',
     secondary: 'bg-[#2B2D31] hover:bg-[#35373C] text-[#FFFFFF] border border-[#3B3F45]',
     danger: 'bg-[#F23F42] hover:bg-red-600 text-white',
     ghost: 'hover:bg-[#2B2D31] text-[#B5BAC1] hover:text-[#FFFFFF]',

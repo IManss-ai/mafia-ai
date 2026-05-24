@@ -175,7 +175,7 @@ export default function SpyPage() {
   if (order.length === 0) {
     return (
       <div className="min-h-screen bg-[#1E1F22] flex items-center justify-center">
-        <span className="w-8 h-8 border-2 border-[#5865F2] border-t-transparent rounded-full animate-spin" />
+        <span className="w-8 h-8 border-2 border-[#14B8A6] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -231,7 +231,7 @@ export default function SpyPage() {
             {gamePhase === 'playing' && (
               <div className="text-center">
                 <span className="text-[10px] uppercase tracking-[0.15em] text-[#B5BAC1] font-bold">
-                  Ход: <span className="text-[#5865F2] font-extrabold">{getSuspectName(currentSpeakerId)}</span>
+                  Ход: <span className="text-[#14B8A6] font-extrabold">{getSuspectName(currentSpeakerId)}</span>
                 </span>
               </div>
             )}
@@ -250,7 +250,7 @@ export default function SpyPage() {
                       <Avatar
                         seed={seed}
                         className={`w-12 h-12 md:w-14 md:h-14 border-2 transition-transform duration-300
-                          ${isCurrentSpeaker ? 'border-[#5865F2] scale-105' : 'border-[#3B3F45]'}
+                          ${isCurrentSpeaker ? 'border-[#14B8A6] scale-105' : 'border-[#3B3F45]'}
                           ${hasSpoken && !isCurrentSpeaker ? 'opacity-60' : ''}`}
                       />
                       {hasSpoken && (
@@ -275,9 +275,9 @@ export default function SpyPage() {
                   <span className="text-[9px] text-[#B5BAC1] font-extrabold uppercase tracking-widest block mb-2">Активная речь</span>
                   {isLoading ? (
                     <div className="flex gap-1 items-center justify-center py-2">
-                      <span className="w-2.5 h-2.5 bg-[#5865F2] rounded-full animate-bounce [animation-delay:0ms]" />
-                      <span className="w-2.5 h-2.5 bg-[#5865F2] rounded-full animate-bounce [animation-delay:150ms]" />
-                      <span className="w-2.5 h-2.5 bg-[#5865F2] rounded-full animate-bounce [animation-delay:300ms]" />
+                      <span className="w-2.5 h-2.5 bg-[#14B8A6] rounded-full animate-bounce [animation-delay:0ms]" />
+                      <span className="w-2.5 h-2.5 bg-[#14B8A6] rounded-full animate-bounce [animation-delay:150ms]" />
+                      <span className="w-2.5 h-2.5 bg-[#14B8A6] rounded-full animate-bounce [animation-delay:300ms]" />
                     </div>
                   ) : (
                     <p className="text-[#FFFFFF] text-sm font-semibold italic leading-relaxed">
@@ -299,7 +299,7 @@ export default function SpyPage() {
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     placeholder="Опиши своё слово одним коротким предложением..."
-                    className="flex-1 bg-[#2B2D31] border border-[#3B3F45] text-[#FFFFFF] placeholder-[#B5BAC1] rounded-xl px-4 py-3 text-xs outline-none focus:ring-1 focus:ring-[#5865F2]"
+                    className="flex-1 bg-[#2B2D31] border border-[#3B3F45] text-[#FFFFFF] placeholder-[#B5BAC1] rounded-xl px-4 py-3 text-xs outline-none focus:ring-1 focus:ring-[#14B8A6]"
                   />
                   <AnimatedButton
                     type="submit"
@@ -319,7 +319,7 @@ export default function SpyPage() {
               )}
 
               {gamePhase === 'voting' && (
-                <div className="w-full py-3 bg-[#5865F2]/10 border border-[#5865F2]/30 rounded-xl text-center text-xs text-[#5865F2] font-bold">
+                <div className="w-full py-3 bg-[#14B8A6]/10 border border-[#14B8A6]/30 rounded-xl text-center text-xs text-[#14B8A6] font-bold">
                   Все описали слова. Проголосуйте за шпиона на панели справа!
                 </div>
               )}
@@ -344,7 +344,7 @@ export default function SpyPage() {
                       {!isUser && <span className="text-[9px] text-[#B5BAC1] ml-1 mb-0.5 font-semibold">{desc.name}</span>}
                       <div className={`rounded-xl px-3 py-2 text-xs leading-relaxed
                         ${isUser
-                          ? 'bg-[#5865F2]/20 border border-[#5865F2]/30 text-[#FFFFFF] rounded-tr-none'
+                          ? 'bg-[#14B8A6]/20 border border-[#14B8A6]/30 text-[#FFFFFF] rounded-tr-none'
                           : 'bg-[#1E1F22] border border-[#3B3F45] text-[#FFFFFF] rounded-tl-none'}`}>
                         {desc.description}
                       </div>
@@ -375,7 +375,7 @@ export default function SpyPage() {
                       <div
                         key={id}
                         className={`flex items-center justify-between p-3 border rounded-xl transition-all
-                          ${isVotable ? 'border-[#3B3F45] bg-[#1E1F22] hover:border-[#5865F2]/50 hover:bg-[#35373C]' : 'border-[#3B3F45] bg-[#1E1F22] opacity-40'}`}
+                          ${isVotable ? 'border-[#3B3F45] bg-[#1E1F22] hover:border-[#14B8A6]/50 hover:bg-[#35373C]' : 'border-[#3B3F45] bg-[#1E1F22] opacity-40'}`}
                       >
                         <div className="flex items-center gap-3">
                           <Avatar seed={seed} className="w-8 h-8 flex-shrink-0" />
@@ -449,7 +449,7 @@ export default function SpyPage() {
                   </div>
                   <div className="flex items-center justify-between text-xs pt-1">
                     <span className="text-[#B5BAC1] font-medium">Шпион знал:</span>
-                    <span className="text-[#5865F2] font-bold font-mono uppercase">{wordPair.spy}</span>
+                    <span className="text-[#14B8A6] font-bold font-mono uppercase">{wordPair.spy}</span>
                   </div>
                 </div>
 

@@ -79,14 +79,14 @@ export default function ChatPanel({ villager, history, onSendMessage, isLoading 
                 <div
                   className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed relative flex flex-col
                     ${isUser
-                      ? 'bg-[#5865F2]/20 border border-[#5865F2]/30 text-[#FFFFFF] rounded-tr-none'
+                      ? 'bg-[#14B8A6]/20 border border-[#14B8A6]/30 text-[#FFFFFF] rounded-tr-none'
                       : 'bg-[#2B2D31] border border-[#3B3F45] text-[#FFFFFF] rounded-tl-none'
                     }`}
                 >
                   <p className="pr-12">{msg.content}</p>
                   <div className="absolute bottom-1.5 right-2.5 flex items-center gap-1 text-[9px] text-[#B5BAC1] font-mono select-none">
                     <span>{timeStr}</span>
-                    {isUser && <span className="text-[#5865F2] font-bold">✓✓</span>}
+                    {isUser && <span className="text-[#14B8A6] font-bold">✓✓</span>}
                   </div>
                 </div>
               </div>
@@ -127,7 +127,7 @@ export default function ChatPanel({ villager, history, onSendMessage, isLoading 
                 key={idx}
                 type="button"
                 onClick={() => handleChipClick(chip)}
-                className="bg-[#1E1F22] hover:bg-[#35373C] border border-[#3B3F45] hover:border-[#5865F2]/50 text-[10px] font-semibold text-[#B5BAC1] px-3 py-1.5 rounded-full transition-all active:scale-95"
+                className="bg-[#1E1F22] hover:bg-[#35373C] border border-[#3B3F45] hover:border-[#14B8A6]/50 text-[10px] font-semibold text-[#B5BAC1] px-3 py-1.5 rounded-full transition-all active:scale-95"
               >
                 {chip}
               </button>
@@ -142,12 +142,12 @@ export default function ChatPanel({ villager, history, onSendMessage, isLoading 
             onChange={e => setInput(e.target.value)}
             placeholder="Задайте вопрос..."
             disabled={isLoading}
-            className="flex-1 bg-[#1E1F22] border border-[#3B3F45] text-[#FFFFFF] placeholder-[#B5BAC1] rounded-xl px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#5865F2] disabled:opacity-50"
+            className="flex-1 bg-[#1E1F22] border border-[#3B3F45] text-[#FFFFFF] placeholder-[#B5BAC1] rounded-xl px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#14B8A6] disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="px-5 py-3 bg-[#5865F2] hover:bg-[#4752C4] disabled:opacity-40 text-white text-sm font-semibold rounded-xl transition-colors"
+            className="px-5 py-3 bg-[#14B8A6] hover:bg-[#0D9488] disabled:opacity-40 text-white text-sm font-semibold rounded-xl transition-colors"
           >
             Спросить
           </button>

@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 interface Props {
   children: React.ReactNode;
   active?: boolean;
-  color?: 'purple' | 'blue' | 'emerald';
+  color?: 'teal' | 'blue' | 'emerald';
 }
 
-export default function PulseRing({ children, active = false, color = 'purple' }: Props) {
+export default function PulseRing({ children, active = false, color = 'teal' }: Props) {
   if (!active) return <>{children}</>;
 
   const ringColors = {
-    purple: 'border-purple-500/70',
+    teal: 'border-teal-500/70',
     blue: 'border-blue-500/70',
     emerald: 'border-emerald-500/70',
   };

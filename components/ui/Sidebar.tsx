@@ -26,7 +26,7 @@ export default function Sidebar() {
           {/* Logo Section */}
           <div className="h-16 flex items-center px-6 border-b border-zinc-850">
             <Link href="/" className="flex items-center gap-2">
-              <span className="font-extrabold text-lg tracking-wider bg-gradient-to-r from-purple-500 to-indigo-400 bg-clip-text text-transparent">
+              <span className="font-extrabold text-lg tracking-wider bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
                 WePlay KZ
               </span>
             </Link>
@@ -45,11 +45,11 @@ export default function Sidebar() {
                   className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all group
                     ${
                       active
-                        ? 'bg-purple-600/15 text-purple-400 border border-purple-500/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]'
+                        ? 'bg-teal-500/15 text-teal-400 border border-teal-500/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]'
                         : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border border-transparent'
                     }`}
                 >
-                  <Icon className={`w-4 h-4 transition-transform group-hover:scale-105 ${active ? 'text-purple-400' : 'text-zinc-400 group-hover:text-zinc-300'}`} />
+                  <Icon className={`w-4 h-4 transition-transform group-hover:scale-105 ${active ? 'text-teal-400' : 'text-zinc-400 group-hover:text-zinc-300'}`} />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -88,7 +88,7 @@ export default function Sidebar() {
               key={item.path}
               href={item.path}
               className={`flex flex-col items-center justify-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all
-                ${active ? 'text-purple-400' : 'text-zinc-400 hover:text-zinc-200'}`}
+                ${active ? 'text-teal-400' : 'text-zinc-400 hover:text-zinc-200'}`}
             >
               <Icon className="w-5 h-5" />
               <span>{item.name}</span>
@@ -99,7 +99,7 @@ export default function Sidebar() {
         <Link
           href="/profile"
           className={`flex flex-col items-center justify-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all
-            ${pathname === '/profile' ? 'text-purple-400' : 'text-zinc-400'}`}
+            ${pathname === '/profile' ? 'text-teal-400' : 'text-zinc-400'}`}
         >
           <Avatar seed="Мансур" className="w-5 h-5" />
           <span>Профиль</span>

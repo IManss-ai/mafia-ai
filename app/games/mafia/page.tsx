@@ -291,7 +291,7 @@ export default function GamePage() {
   if (!gameState) {
     return (
       <div className="min-h-screen bg-[#1E1F22] flex items-center justify-center">
-        <span className="w-8 h-8 border-2 border-[#5865F2] border-t-transparent rounded-full animate-spin" />
+        <span className="w-8 h-8 border-2 border-[#14B8A6] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -339,7 +339,7 @@ export default function GamePage() {
               />
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-8 select-none bg-[#1E1F22]">
-                <div className="w-12 h-12 rounded-full bg-[#2B2D31] border border-[#3B3F45] flex items-center justify-center text-[#5865F2] mb-4">
+                <div className="w-12 h-12 rounded-full bg-[#2B2D31] border border-[#3B3F45] flex items-center justify-center text-[#14B8A6] mb-4">
                   <Avatar seed="?" className="w-6 h-6 border-none bg-transparent" />
                 </div>
                 <p className="text-[#FFFFFF] text-sm font-bold">Начало допроса</p>
@@ -371,7 +371,7 @@ export default function GamePage() {
             >
               <div className="max-w-md w-full space-y-6">
                 <span className="text-[10px] uppercase tracking-[0.2em] text-[#B5BAC1] font-bold">НОЧЬ В АЛМАТЫ</span>
-                <h2 className="text-3xl font-extrabold text-[#5865F2] tracking-tight">
+                <h2 className="text-3xl font-extrabold text-[#14B8A6] tracking-tight">
                   Наступает ночь...
                 </h2>
                 <p className="text-xs text-[#B5BAC1]">Город спит. Убийцы выходят на улицы.</p>

@@ -15,7 +15,7 @@ export default function Toast({ message, isVisible, onClose, type = 'info' }: Pr
   const colors = {
     success: 'bg-[#23A55A]',
     error: 'bg-[#F23F42]',
-    info: 'bg-[#5865F2]'
+    info: 'bg-[#14B8A6]'
   };
 
   return (

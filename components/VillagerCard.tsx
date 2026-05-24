@@ -37,8 +37,8 @@ export default function VillagerCard({ villager, isSelected, onClick, onSuspicio
       className={`w-full flex flex-col gap-2 p-3 rounded-xl transition-all border select-none
         ${isDead ? 'opacity-40 cursor-not-allowed border-[#3B3F45] bg-[#2B2D31]/50' : 'cursor-pointer'}
         ${isSelected && !isDead
-          ? 'bg-[#35373C] border-[#5865F2]'
-          : 'bg-[#2B2D31] border-[#3B3F45] hover:bg-[#35373C] hover:border-[#5865F2]/50'
+          ? 'bg-[#35373C] border-[#14B8A6]'
+          : 'bg-[#2B2D31] border-[#3B3F45] hover:bg-[#35373C] hover:border-[#14B8A6]/50'
         }
       `}
     >

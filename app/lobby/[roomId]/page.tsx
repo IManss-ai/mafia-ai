@@ -73,7 +73,7 @@ export default function LobbyRoomPage({ params }: { params: { roomId: string } }
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs font-bold text-zinc-200">{p.name}</span>
                         {p.isHost && (
-                          <span className="flex items-center gap-0.5 px-1.5 py-0.5 bg-purple-500/15 border border-purple-500/25 text-[7px] text-purple-400 font-extrabold rounded">
+                          <span className="flex items-center gap-0.5 px-1.5 py-0.5 bg-teal-500/15 border border-teal-500/25 text-[7px] text-teal-400 font-extrabold rounded">
                             <Shield className="w-2.5 h-2.5" />
                             <span>ХОСТ</span>
                           </span>
@@ -125,7 +125,7 @@ export default function LobbyRoomPage({ params }: { params: { roomId: string } }
             {/* Launch Game controls */}
             <div className="space-y-3">
               {countdown !== null ? (
-                <div className="w-full py-4 bg-purple-950/20 border border-purple-500/30 text-purple-400 text-center rounded-2xl font-bold shadow-[0_0_15px_rgba(168,85,247,0.15)] flex flex-col items-center justify-center">
+                <div className="w-full py-4 bg-teal-900/20 border border-teal-500/30 text-teal-400 text-center rounded-2xl font-bold shadow-[0_0_15px_rgba(20,184,166,0.15)] flex flex-col items-center justify-center">
                   <span className="text-xs font-bold text-zinc-400">ЗАПУСК ИГРЫ ЧЕРЕЗ</span>
                   <span className="text-2xl font-black mt-1 font-mono tracking-wider animate-ping">{countdown}</span>
                 </div>
@@ -143,7 +143,7 @@ export default function LobbyRoomPage({ params }: { params: { roomId: string } }
                     <AnimatedButton
                       onClick={handleStartGame}
                       variant="primary"
-                      className="w-full py-3 text-xs font-extrabold rounded-2xl bg-purple-600 hover:bg-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.25)] flex items-center justify-center gap-1.5"
+                      className="w-full py-3 text-xs font-extrabold rounded-2xl bg-teal-600 hover:bg-teal-500 shadow-[0_0_12px_rgba(20,184,166,0.25)] flex items-center justify-center gap-1.5"
                     >
                       <Play className="w-4 h-4" />
                       <span>Запустить сессию</span>
