@@ -18,7 +18,7 @@ export async function callGemini(
   userMessage: string
 ): Promise<string> {
   const model = getGeminiClient().getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.0-flash',
     systemInstruction: systemPrompt,
   });
 
@@ -34,7 +34,7 @@ export async function callGemini(
 
 export async function callGeminiForJSON(prompt: string): Promise<unknown> {
   const model = getGeminiClient().getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.0-flash',
   });
 
   const result = await model.generateContent(prompt);

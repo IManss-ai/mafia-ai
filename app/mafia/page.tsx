@@ -60,7 +60,7 @@ export default function GamePage() {
     setIsLoading(true);
     try {
       const currentHistory = gameState.chatHistories[selectedId] ?? [];
-      const res = await fetch('/api/chat', {
+      const res = await fetch('/api/mafia/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -165,7 +165,7 @@ export default function GamePage() {
       .map(v => v.id);
 
     try {
-      const res = await fetch('/api/night', {
+      const res = await fetch('/api/mafia/night', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -195,20 +195,20 @@ export default function GamePage() {
       };
 
       const winCheck = checkWinCondition({ ...afterKill, phase: 'night' });
-        if (winCheck !== 'playing') {
-          const aliveAfterKill = afterKill.villagers.filter(v => v.status === 'alive');
-          const aliveMafia = aliveAfterKill.filter(v => v.role === 'mafia').length;
-          const aliveCivilian = aliveAfterKill.filter(v => v.role === 'civilian').length;
-          const loseReason =
-            aliveMafia >= aliveCivilian
-              ? 'Мафия получила большинство голосов.'
-              : 'Три ночи прошло. Мафия победила.';
-          const final = {
-            ...afterKill,
-            phase: winCheck as 'won' | 'lost',
-            loseReason: winCheck === 'lost' ? loseReason : undefined,
-          };
-          setGameState(final);
+      if (winCheck !== 'playing') {
+        const aliveAfterKill = afterKill.villagers.filter(v => v.status === 'alive');
+        const aliveMafia = aliveAfterKill.filter(v => v.role === 'mafia').length;
+        const aliveCivilian = aliveAfterKill.filter(v => v.role === 'civilian').length;
+        const loseReason =
+          aliveMafia >= aliveCivilian
+            ? 'Мафия получила большинство голосов.'
+            : 'Три ночи прошло. Мафия победила.';
+        const final = {
+          ...afterKill,
+          phase: winCheck as 'won' | 'lost',
+          loseReason: winCheck === 'lost' ? loseReason : undefined,
+        };
+        setGameState(final);
         saveState(final);
       } else {
         setGameState(afterKill);
@@ -216,7 +216,6 @@ export default function GamePage() {
       }
     } catch (err) {
       console.error('Night phase error:', err);
-      // Fallback: kill a random civilian so the game loop is preserved
       const civilians = state.villagers.filter(v => v.status === 'alive' && v.role === 'civilian');
       const target = civilians.length > 0
         ? civilians[Math.floor(Math.random() * civilians.length)]

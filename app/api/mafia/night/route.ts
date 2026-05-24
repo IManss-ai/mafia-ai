@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     try {
       result = await callGeminiForJSON(prompt) as NightResponse;
     } catch (err) {
-      console.error('/api/night Gemini fallback:', err);
+      console.error('/api/mafia/night Gemini fallback:', err);
       return NextResponse.json(buildFallbackNight(targets, dayNumber));
     }
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(result);
   } catch (err) {
-    console.error('/api/night error:', err);
+    console.error('/api/mafia/night error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

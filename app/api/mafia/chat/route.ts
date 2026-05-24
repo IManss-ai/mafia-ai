@@ -32,14 +32,14 @@ export async function POST(req: NextRequest) {
       const response = await callGemini(systemPrompt, chatHistory, newMessage);
       return NextResponse.json({ response });
     } catch (err) {
-      console.error('/api/chat Gemini fallback:', err);
+      console.error('/api/mafia/chat Gemini fallback:', err);
       return NextResponse.json({
         response: buildFallbackReply(villager, gameState.day),
         fallback: true,
       });
     }
   } catch (err) {
-    console.error('/api/chat error:', err);
+    console.error('/api/mafia/chat error:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
