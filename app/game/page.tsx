@@ -195,13 +195,20 @@ export default function GamePage() {
       };
 
       const winCheck = checkWinCondition({ ...afterKill, phase: 'night' });
-      if (winCheck !== 'playing') {
-        const final = {
-          ...afterKill,
-          phase: winCheck as 'won' | 'lost',
-          loseReason: winCheck === 'lost' ? 'Три ночи прошло. Мафия победила.' : undefined,
-        };
-        setGameState(final);
+        if (winCheck !== 'playing') {
+          const aliveAfterKill = afterKill.villagers.filter(v => v.status === 'alive');
+          const aliveMafia = aliveAfterKill.filter(v => v.role === 'mafia').length;
+          const aliveCivilian = aliveAfterKill.filter(v => v.role === 'civilian').length;
+          const loseReason =
+            aliveMafia >= aliveCivilian
+              ? 'Мафия получила большинство голосов.'
+              : 'Три ночи прошло. Мафия победила.';
+          const final = {
+            ...afterKill,
+            phase: winCheck as 'won' | 'lost',
+            loseReason: winCheck === 'lost' ? loseReason : undefined,
+          };
+          setGameState(final);
         saveState(final);
       } else {
         setGameState(afterKill);
