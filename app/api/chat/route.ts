@@ -30,7 +30,8 @@ export async function POST(req: NextRequest) {
     const response = await callGemini(systemPrompt, chatHistory, newMessage);
     return NextResponse.json({ response });
   } catch (err) {
-    console.error('/api/chat error:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error('/api/chat error:', msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
